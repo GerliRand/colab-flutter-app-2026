@@ -39,21 +39,51 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
+    var pair = appState.current;
 
     return Scaffold(
-      body: Column(
-        children: [
-          Text('A random idea TESTING:'),
-          Text(appState.current.asLowerCase),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center, // vertical: center
+          children: [
+            BigCard(pair: pair),
+            SizedBox(height: 20), // adding space between card and button
+            // Next button
+            ElevatedButton(
+              onPressed: () {
+                appState.getNext();
+              },
+              child: Text('Next'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
-          // Next button
-          ElevatedButton(
-            onPressed: () {
-              appState.getNext();
-            },
-            child: Text('Next'),
-          ),
-        ],
+class BigCard extends StatelessWidget {
+  const BigCard({super.key, required this.pair});
+
+  final WordPair pair;
+
+  @override
+  Widget build(BuildContext context) {
+    var theme = Theme.of(context); // card color
+    // text style
+    final style = theme.textTheme.displayMedium!.copyWith(
+      color: theme.colorScheme.onPrimary,
+    );
+
+    return Card(
+      color: theme.colorScheme.primary, // add red color to Card (code up)
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Text(
+          pair.asLowerCase,
+          style: style,
+          semanticsLabel: "${pair.first} ${pair.second}", // for screen readers
+        ),
       ),
     );
   }
